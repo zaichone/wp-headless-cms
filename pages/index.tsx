@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { GetStaticProps } from 'next'
+import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
 import Container from '../components/container'
 import MoreStories from '../components/more-stories'
 import HeroPost from '../components/hero-post'
@@ -9,6 +9,7 @@ import { getAllPostsForHome } from '../lib/api'
 import { CMS_NAME } from '../lib/constants'
 
 export default function Index({ allPosts: { edges }, preview }) {
+  console.log("🚀 ~ file: index.tsx:12 ~ Index ~ allPosts:", edges)
   const heroPost = edges[0]?.node
   const morePosts = edges.slice(1)
 
@@ -35,11 +36,23 @@ export default function Index({ allPosts: { edges }, preview }) {
   )
 }
 
-export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
+export const getServerSideProps: GetServerSideProps = async ({ preview = false }) => {
   const allPosts = await getAllPostsForHome(preview)
-
+  
   return {
-    props: { allPosts, preview },
-    revalidate: 10,
+    props: { allPosts, preview }
   }
 }
+
+/*
+export const getStaticPaths: GetStaticPaths = async ({ preview = false }) => {
+  const allPosts = await getAllPostsForHome(preview)
+  const { edges } = allPosts
+  const slugs = edges.map(post => post.slug)
+
+  return {
+    paths: slugs.map((slug) => ({ params: { slug } })),
+    fallback: false
+  }
+}
+*/
