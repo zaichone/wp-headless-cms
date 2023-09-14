@@ -36,23 +36,10 @@ export default function Index({ allPosts: { edges }, preview }) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ preview = false }) => {
+export const getStaticProps: GetStaticProps = async ({ preview = false }) => {
   const allPosts = await getAllPostsForHome(preview)
   
   return {
     props: { allPosts, preview }
   }
 }
-
-/*
-export const getStaticPaths: GetStaticPaths = async ({ preview = false }) => {
-  const allPosts = await getAllPostsForHome(preview)
-  const { edges } = allPosts
-  const slugs = edges.map(post => post.slug)
-
-  return {
-    paths: slugs.map((slug) => ({ params: { slug } })),
-    fallback: false
-  }
-}
-*/
